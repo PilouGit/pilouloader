@@ -34,10 +34,17 @@ func (signedDictionary *SignedDictionary) AddFile(fileName string, f io.Reader) 
 		log.Fatal(err)
 	}
 
-	hashValue := signedDictionary.signer.Sign(h.Sum(nil))
+	hashValue := h.Sum(nil)
+	signature := signedDictionary.signer.Sign(hashValue)
+	/*if !signedDictionary.signer.Verify(hashValue, signature) {
+		log.Fatalf("Error in verify signature %s", fileName)
+	}*/
+	if !signedDictionary.signer.VerifyLibSodum(hashValue, signature) {
+		log.Fatalf("Error in verify signature in sodium %s", fileName)
+	}
 	var signedFile SignedFile
 	signedFile.FileName = fileName
-	signedFile.Hash = hashValue
+	signedFile.Hash = signature
 	signedDictionary.data = append(signedDictionary.data, signedFile)
 
 }

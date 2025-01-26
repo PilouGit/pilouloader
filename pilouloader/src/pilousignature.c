@@ -125,8 +125,9 @@ unsigned char * compute_hash(signedconfiguration * configuration,php_stream * st
     return  hash;
  }
 
- bool check_integrity(signedconfiguration * configuration,zend_string * filename, unsigned char * computedsignature) {
+ bool check_integrity(signedconfiguration * configuration,zend_string * filename, unsigned char * hashvalue) {
 
+if (configuration==NULL) php_error_docref(NULL, E_ERROR,"Debug: Configuration  is NULL   ");
   zval *signature_value = zend_hash_find(configuration->signature, filename);
     bool result =false;
   if (signature_value!=NULL )
@@ -134,9 +135,10 @@ unsigned char * compute_hash(signedconfiguration * configuration,php_stream * st
             zend_string * signature= Z_STR_P(signature_value);
             zend_string * decoded_signature = php_base64_decode_ex((const unsigned char *)signature->val, signature->len, 1); // Strict mode
             zend_string * decoded_publickey = php_base64_decode_ex((const unsigned char *)configuration->public_key->val, configuration->public_key->len, 1); // Strict mode
-            unsigned long long signed_message_len=32;
-            result= crypto_sign_open(computedsignature, &signed_message_len,
-                     decoded_signature->val, decoded_publickey->len, decoded_publickey->val)==0;
+            php_error_docref(NULL, E_NOTICE,"Debug: Signature  %s  ", signature->val);
+             php_error_docref(NULL, E_NOTICE,"Debug: Computed Hash de %s  ", php_base64_encode(hashvalue,32)->val);
+           unsigned long long signed_message_len=32;
+            result= crypto_sign_verify_detached(decoded_signature->val, hashvalue, 32, decoded_publickey->val)==0;
 
              }    
              return result; 

@@ -20,6 +20,6 @@ if test "$PHP_PILOULOADER" = "yes"; then
   PHP_EVAL_LIBLINE($LIBSODIUM_LIBS, PILOULOADER_SHARED_LIBADD)
   PHP_SUBST(PILOULOADER_SHARED_LIBADD)
 PHP_ADD_EXTENSION_DEP(pilouloader, json, true)
-    PHP_NEW_EXTENSION(pilouloader, [ pilouloader.c  src/pilousignature.c], $ext_shared)
+    PHP_NEW_EXTENSION(pilouloader, [ src/pilouloader.c  src/piloucustomhandler.c src/pilousignature.c], $ext_shared)
     
 fi
