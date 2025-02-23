@@ -11,13 +11,19 @@ if test "$PHP_PILOULOADER" = "yes"; then
       LIBSODIUM_CFLAGS=`$PKG_CONFIG libsodium --cflags`
       LIBSODIUM_LIBS=`$PKG_CONFIG libsodium --libs`
       LIBSODIUM_VERSION=`$PKG_CONFIG --modversion libsodium`
+      LIBPCR2_CLAGS=`$PKG_CONFIG libpcre2-32 --clags`
+      LIBPCR2_LIBS=`$PKG_CONFIG libpcre2-32 --libs`
+
       AC_MSG_RESULT(version $LIBSODIUM_VERSION found using pkg-config)
       PHP_EVAL_LIBLINE($LIBSODIUM_LIBS, SODIUM_SHARED_LIBADD)
       PHP_EVAL_INCLINE($LIBSODIUM_CFLAGS)
     fi
+
     AC_DEFINE(HAVE_PILOULOADER 1, [Whether you have My Extension])
     PHP_EVAL_INCLINE($LIBSODIUM_CFLAGS)
-  PHP_EVAL_LIBLINE($LIBSODIUM_LIBS, PILOULOADER_SHARED_LIBADD)
+     PHP_EVAL_INCLINE($LIBPCR2_CLAGS)
+    
+  PHP_EVAL_LIBLINE($LIBSODIUM_LIBS,$LIBPCR2_LIBS, PILOULOADER_SHARED_LIBADD)
   PHP_SUBST(PILOULOADER_SHARED_LIBADD)
 PHP_ADD_EXTENSION_DEP(pilouloader, json, true)
     PHP_NEW_EXTENSION(pilouloader, [ src/pilouloader.c  src/piloucustomhandler.c src/pilousignature.c], $ext_shared)

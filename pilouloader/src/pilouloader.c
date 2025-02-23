@@ -12,7 +12,6 @@ signedconfiguration * signed_configuration;
 zend_op_array *(*old_compile_string)(zend_string *source_string, const char *filename, zend_compile_position position);
 
 
-
 static PHP_INI_MH(OnUpdateConfigurationFile)
 {
      if (stage == PHP_INI_STAGE_RUNTIME) {
@@ -32,19 +31,18 @@ ZEND_INI_END()
 PHP_MINIT_FUNCTION(pilouloader)
 {
      REGISTER_INI_ENTRIES();
-    fprintf(stderr, "startup here\n ");
     if (sodium_init() < 0)
     {
         printf("Erreur d'initialisation de libsodium\n");
         return FAILURE;
     }
-    fprintf(stderr, "end of sodium here\n ");
-
-   
+    
     old_compile_file = zend_compile_file;
     zend_compile_file = custom_compile_file;
+  
     old_compile_string=zend_compile_string;
     zend_compile_string=custom_compile_string;
+    
     return SUCCESS;
 }
 PHP_MINFO_FUNCTION(pilouloader)
@@ -59,6 +57,7 @@ PHP_MSHUTDOWN_FUNCTION(pilouloader)
     fprintf(stderr, "shutdown\n ");
     zend_compile_file = old_compile_file;
     zend_compile_string=old_compile_string;
+
     return SUCCESS;
 }
 PHP_RINIT_FUNCTION(pilouloader) {
@@ -103,7 +102,7 @@ zend_module_entry pilouloader_module_entry = {
     STANDARD_MODULE_HEADER,
     "pilouloader",
     NULL,
-     PHP_MINIT(pilouloader),
+    PHP_MINIT(pilouloader),
     PHP_MSHUTDOWN(pilouloader),
     PHP_RINIT(pilouloader),
     NULL,

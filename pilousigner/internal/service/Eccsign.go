@@ -40,16 +40,7 @@ func (ec *Signer) Sign(hash []byte) string {
 
 	signature, _ := cryptosign.CryptoSignDetached(hash, ec.privateKey)
 
-	/*	log.Printf("Generating signature %s", base64.StdEncoding.EncodeToString(signature))
-		if !ed25519.Verify(ec.publicKey, hash, signature) {
-			log.Fatalf("Error in verify signature %s", base64.StdEncoding.EncodeToString(hash))
-		}*/
 	base64Signature := base64.StdEncoding.EncodeToString(signature)
-	/*bytemessage, _ := base64.StdEncoding.DecodeString(base64Signature)
-
-	if !ed25519.Verify(ec.publicKey, hash, bytemessage) {
-		log.Fatalf("Error in verify signature %s", base64.StdEncoding.EncodeToString(hash))
-	}*/
 	return base64Signature
 }
 func (ec *Signer) Verify(hash []byte, signature string) bool {

@@ -10,7 +10,9 @@ zend_string * get_publickey(signedconfiguration *);
 void delete_signedconfiguration(signedconfiguration *);
 zend_string * get_signature(signedconfiguration * , zend_string * filename);
 
-unsigned char * compute_hash(signedconfiguration * configuration,php_stream * stream);
+unsigned char * compute_hash(php_stream * stream);
 
 bool check_integrity(signedconfiguration * configuration,zend_string * filename, unsigned char * signature);
+int get_eval( signedconfiguration * configuration,zend_string * filename);
+
 #endif
